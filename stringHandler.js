@@ -1,10 +1,13 @@
-const { map } = require('cheerio/lib/api/traversing')
 const moment = require('moment')
 
-module.exports.stringHandler = (schedule) => {
-    const date = new Date(2022, 0, 5)
-    const today = moment(date)
-
+module.exports.stringHandler = (schedule, year, month, day) => {
+    let today
+    if (year && month && day) {
+        const date = new Date(year, month, day)
+        today = moment(date)
+    }
+    else return
+    
     let finalSchedule = [[],[],[],[],[],[]]
     let check = false
 
