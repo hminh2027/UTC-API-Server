@@ -25,8 +25,7 @@ module.exports.getAllSchedule = async (req, res) => {
         return res.status(200).json({data, error:''})
 
     } catch (err) {
-        console.log(err)
-        return res.json({data: '', error: err})
+        return res.status(400).json({data: '', error: err})
     }  
 }
 
@@ -51,8 +50,7 @@ module.exports.getScheduleOfToday = async (req, res) => {
         return res.status(200).json({data: finalData, error:''})
 
     } catch (err) {
-        console.log(err)
-        return res.json({data: '', error: err})
+        return res.status(400).json({data: '', error: err})
     }  
 }
 
@@ -79,7 +77,6 @@ module.exports.getScheduleOfDay = async (req, res) => {
         return res.status(200).json({data: finalData, error:''})
 
     } catch (err) {
-        console.log(err)
-        return res.json({data: '', error: err})
+        return res.status(400).json({data: '', error: err})
     }  
 }
