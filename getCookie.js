@@ -1,6 +1,6 @@
 const request = require('request')
 
-module.exports.getCookie = (username, password, mainUrl) => {
+module.exports.getCookie = (username, password, url) => {
     const formData = {
         'txtUserName': username,
         'txtPassword': password,
@@ -10,7 +10,7 @@ module.exports.getCookie = (username, password, mainUrl) => {
     }
 
     const options = {
-        url: `${mainUrl}`,
+        url: `${url}`,
         method: 'POST',
         headers: {},
         formData
@@ -22,7 +22,7 @@ module.exports.getCookie = (username, password, mainUrl) => {
                 const cookie = response.headers['set-cookie'].toString().split(';')[0]
                 resolve(cookie)          
             }
-            else reject('Get cookie failed!')
+            else reject('Wrong username or password')
         })
     })
 }

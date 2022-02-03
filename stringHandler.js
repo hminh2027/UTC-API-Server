@@ -1,30 +1,43 @@
+const { map } = require('cheerio/lib/api/traversing')
 const moment = require('moment')
 
 module.exports.stringHandler = (schedule) => {
-    const today = moment()
+    const date = new Date(2022, 0, 5)
+    const today = moment(date)
 
-    let rs = [[],[],[],[],[],[]]
+    let finalSchedule = [[],[],[],[],[],[]]
     let check = false
 
     schedule.map(e=>{
-        const period = e.time.split(':')[0]
-        const from = period.split(' ')[1]
-        const to = period.split(' ')[3]
-        if(today.diff(moment(from, "DD/MM/YYYY"), 'days') > 0 && today.diff(moment(to, "DD/MM/YYYY"), 'days') < 0) {
-            const time = e.time.split(':')[1]
-            const days = time.trim().split('\Thứ')
-            days.map(d=>{
-                if(d=='') return
-                const day = d.split('tiết')[0]
-                const shift = d.split('tiết')[1]
-                rs[day-2].push({
-                    subject: e.subject.split('-')[0],
-                    time: 'Tiết ' + shift
+        const periodAndStudyDays = e.time.split('\Từ')
+        periodAndStudyDays.shift()
+
+        periodAndStudyDays.map(periodAndStudyDay=>{
+            const period = periodAndStudyDay && periodAndStudyDay.split(':')[0]
+            const studyDays = periodAndStudyDay && periodAndStudyDay.split(':')[1].split('\Thứ')
+
+            const startDate = period.split(' ')[1].trim()
+            const finishDate = period.split(' ')[3].trim()
+            
+            const isStudying = today.diff(moment(startDate, "DD/MM/YYYY"), 'days') > 0 && today.diff(moment(finishDate, "DD/MM/YYYY"), 'days') < 0
+
+            if(isStudying) {
+                studyDays.shift()
+
+                studyDays.map(d=>{
+                    if(!d) return
+                    const day = d.split('tiết')[0].trim()
+                    const shift = d.split('tiết')[1].trim()
+
+                    finalSchedule[day-2].push({
+                        subject: e.subject.split('-')[0],
+                        time: 'Tiết ' + shift
+                    })
                 })
-            })
-          check=true
-        }
+            check=true
+            }
+        })
     })
     if(!check) return
-    return rs
+    return finalSchedule
 }

@@ -6,19 +6,28 @@ const { getRequest } = require('../request')
 const { getSchedule } = require('../htmlHandler')
 const { stringHandler } = require('../stringHandler')
 
-const username = '191210709'
-const password = '85273200'
+module.exports.schedule = async (req, res) => {
+    try {
+        const {username, password} = req.body
+        if (!username || !password) return res.status(400).json({data: '', error: 'Username or password not found!'})
 
-module.exports.schedule = async (req,res) => {
-    const hashedPasword = md5(password)
-    const sessionId = await getSessionId()
+        const hashedPasword = md5(password)
+        const sessionId = await getSessionId()
 
-    const loginUrl = `https://qldt.utc.edu.vn/CMCSoft.IU.Web.Info/${sessionId}/login.aspx`
-    const registerUrl = `https://qldt.utc.edu.vn/CMCSoft.IU.Web.Info/${sessionId}/StudyRegister/StudyRegister.aspx`
+        const loginUrl = `https://qldt.utc.edu.vn/CMCSoft.IU.Web.Info/${sessionId}/login.aspx`
+        const registerUrl = `https://qldt.utc.edu.vn/CMCSoft.IU.Web.Info/${sessionId}/StudyRegister/StudyRegister.aspx`
+    
+        const cookie = await getCookie(username, hashedPasword, loginUrl)
+    
+        const html = await getRequest(cookie, registerUrl)
+        const data = getSchedule (html)
+        const finalData = stringHandler(data)
 
-    const cookie = await getCookie(username, hashedPasword, loginUrl)
-    const html = await getRequest(cookie, registerUrl)
-    const data = getSchedule (html)
-    const finalData = stringHandler(data)
-    res.json(data)
+        return res.status(200).json({data: finalData, error:''})
+
+    } catch (err) {
+        console.log(err)
+        return res.json({data: '', error: err})
+    }
+    
 }
