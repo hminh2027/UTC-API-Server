@@ -1,7 +1,6 @@
 const md5 = require('md5')
 
 const { getCookie } = require('../getCookie')
-const { postRequest } = require('../request')
 const { getCredits } = require('../htmlHandler')
 
 const username = '420334'

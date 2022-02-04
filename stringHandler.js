@@ -22,7 +22,7 @@ module.exports.stringHandler = (schedule, year, month, day) => {
             const startDate = period.split(' ')[1].trim()
             const finishDate = period.split(' ')[3].trim()
             
-            const isStudying = today.diff(moment(startDate, "DD/MM/YYYY"), 'days') > 0 && today.diff(moment(finishDate, "DD/MM/YYYY"), 'days') < 0
+            const isStudying = today.diff(moment(startDate, "DD/MM/YYYY"), 'days') >= 0 && today.diff(moment(finishDate, "DD/MM/YYYY"), 'days') <= 0
 
             if(isStudying) {
                 studyDays.shift()

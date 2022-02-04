@@ -12,6 +12,25 @@ module.exports.getSchedule = (html) => {
     return data
 }
 
+module.exports.getStudent = (html) => {
+    let data = {}
+    const $ = cheerio.load(html)
+
+    data.lastName = $('#txtHoDem', html).val()
+    data.firstName = $('#txtTen', html).val()
+    data.gender = $('#gioitinh', html).text()
+    data.studentId = $('#txtMaSV', html).val()
+    data.studentBankAccount = $('#txtSoTaiKhoanNganHang', html).val()
+    data.identityCard = $('#txtCMTND', html).val()
+    data.birth = $('#txtNgaySinh', html).val()
+    data.bornIn = $('#txtNoiSinh', html).val()
+    data.country = $('#drpQuocTich', html).find('option[selected=selected]').text()
+    data.tel = $('#txtDienThoaiCaNHAN', html).val()
+    data.email = $('#txtEmail', html).val()
+
+    return data
+}
+
 module.exports.getCredits = (html) => {
     let data = {
         total: 0,

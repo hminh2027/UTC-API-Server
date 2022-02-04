@@ -6,8 +6,8 @@ module.exports.getRequest = (cookie, url) => {
     }
     
     const options = {
-        url: url,
-        method: 'POST',
+        url,
+        method: 'GET',
         headers
     }
     

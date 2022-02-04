@@ -2,7 +2,7 @@ const md5 = require('md5')
 
 const { getSessionId } = require('../getSessionId')
 const { getCookie } = require('../getCookie')
-const { getRequest } = require('../request')
+const { getRequest } = require('../getHTML')
 const { getSchedule } = require('../htmlHandler')
 const { stringHandler } = require('../stringHandler')
 
