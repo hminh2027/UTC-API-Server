@@ -3,7 +3,7 @@ const moment = require('moment')
 module.exports.stringHandler = (schedule, year, month, day) => {
     let today
     if (year && month && day) {
-        const date = new Date(year, month, day)
+        const date = new Date(year, month - 1, day)
         today = moment(date)
     }
     else return
