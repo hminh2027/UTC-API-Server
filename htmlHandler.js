@@ -76,6 +76,43 @@ module.exports.getMarks = (html, grade) => {
     return data
 }
 
+module.exports.getGPA = (html, year) => {
+    let data = {detailGPA:[], GPA: {}}
+    const $ = cheerio.load(html)
+
+    if (!year) 
+        $('#grdResult', html).find('tr').not('tr:eq(0), tr:last').each((index, elem)=>{
+            const year = $(elem).find('td:eq(0)').text()
+            const term = $(elem).find('td:eq(1)').text()
+            const scaleOf10 = $(elem).find('td:eq(2)').text()
+            const scaleOf4 = $(elem).find('td:eq(4)').text()
+            const credits = $(elem).find('td:eq(12)').text().replace(/\n/g, '').replace(/\t/g, '')
+            
+            data.detailGPA.push({year, term, scaleOf10, scaleOf4, credits})
+        })
+    
+    else
+        $('#grdResult', html).find(`tr:eq(${(year*3)}), tr:eq(${(year*3)-1}), tr:eq(${(year*3)-2})`).not('tr:last').each((index, elem)=>{
+            const year = $(elem).find('td:eq(0)').text()
+            const term = $(elem).find('td:eq(1)').text()
+            const scaleOf10 = $(elem).find('td:eq(2)').text()
+            const scaleOf4 = $(elem).find('td:eq(4)').text()
+            const credits = $(elem).find('td:eq(12)').text().replace(/\n/g, '').replace(/\t/g, '')
+            
+            data.detailGPA.push({year, term, scaleOf10, scaleOf4, credits})
+        })
+
+    $('#grdResult', html).find('tr:last').each((index, elem)=>{
+        const scaleOf10 = $(elem).find('td:eq(2)').text()
+        const scaleOf4 = $(elem).find('td:eq(4)').text()
+        const credits = $(elem).find('td:eq(12)').text().replace(/\n/g, '').replace(/\t/g, '')
+            
+        data.GPA = {scaleOf10, scaleOf4, credits}
+    })
+    
+    return data
+}
+
 module.exports.getCredits = (html) => {
     let data = {
         total: 0,
