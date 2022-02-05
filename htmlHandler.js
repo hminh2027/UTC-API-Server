@@ -40,6 +40,7 @@ module.exports.getMarks = (html, grade) => {
     $('#tblStudentMark', html).find('tr').not('tr:eq(0)').each((index, elem)=>{
         let mark = $(elem).find('td:eq(12)').html()
         const subject = $(elem).find('td:eq(2)').text().replace(/\n/g, '').replace(/\t/g, '')
+        const credit = $(elem).find('td:eq(3)').text()
 
         if(!mark) return
         mark = mark.split('<br>').pop()
@@ -48,29 +49,29 @@ module.exports.getMarks = (html, grade) => {
         switch (grade) {
             case 'A':
             case 'a':
-                mark >= 8.5 && data.push({subject, mark})
+                mark >= 8.5 && data.push({subject, mark, credit})
                 break
             case 'B':
             case 'b':
-                (7 <= mark && mark <= 8.4) && data.push({subject, mark})
+                (7 <= mark && mark <= 8.4) && data.push({subject, mark, credit})
                 break
             case 'C':
             case 'c':
-                (5.5 <= mark && mark <= 6.9) && data.push({subject, mark})
+                (5.5 <= mark && mark <= 6.9) && data.push({subject, mark, credit})
                 break
             case 'D':
             case 'd':
-                (4 <= mark && mark <= 4.9) && data.push({subject, mark})
+                (4 <= mark && mark <= 4.9) && data.push({subject, mark, credit})
                 break
             case 'F':
             case 'f':
-                (mark < 4) && data.push({subject, mark})
+                (mark < 4) && data.push({subject, mark, credit})
                 break
             default:
                 break
         }
 
-        else data.push({subject, mark})
+        else data.push({subject, mark, credit})
     })
     
     return data
@@ -86,9 +87,9 @@ module.exports.getGPA = (html, year) => {
             const term = $(elem).find('td:eq(1)').text()
             const scaleOf10 = $(elem).find('td:eq(2)').text()
             const scaleOf4 = $(elem).find('td:eq(4)').text()
-            const credits = $(elem).find('td:eq(12)').text().replace(/\n/g, '').replace(/\t/g, '')
+            const credit = $(elem).find('td:eq(12)').text().replace(/\n/g, '').replace(/\t/g, '')
             
-            data.detailGPA.push({year, term, scaleOf10, scaleOf4, credits})
+            data.detailGPA.push({year, term, scaleOf10, scaleOf4, credit})
         })
     
     else
@@ -97,38 +98,18 @@ module.exports.getGPA = (html, year) => {
             const term = $(elem).find('td:eq(1)').text()
             const scaleOf10 = $(elem).find('td:eq(2)').text()
             const scaleOf4 = $(elem).find('td:eq(4)').text()
-            const credits = $(elem).find('td:eq(12)').text().replace(/\n/g, '').replace(/\t/g, '')
+            const credit = $(elem).find('td:eq(12)').text().replace(/\n/g, '').replace(/\t/g, '')
             
-            data.detailGPA.push({year, term, scaleOf10, scaleOf4, credits})
+            data.detailGPA.push({year, term, scaleOf10, scaleOf4, credit})
         })
 
     $('#grdResult', html).find('tr:last').each((index, elem)=>{
         const scaleOf10 = $(elem).find('td:eq(2)').text()
         const scaleOf4 = $(elem).find('td:eq(4)').text()
-        const credits = $(elem).find('td:eq(12)').text().replace(/\n/g, '').replace(/\t/g, '')
+        const credit = $(elem).find('td:eq(12)').text().replace(/\n/g, '').replace(/\t/g, '')
             
-        data.GPA = {scaleOf10, scaleOf4, credits}
+        data.GPA = {scaleOf10, scaleOf4, credit}
     })
     
-    return data
-}
-
-module.exports.getCredits = (html) => {
-    let data = {
-        total: 0,
-        finished: 0
-    }
-
-    const $ = cheerio.load(html)
-    $('.cssListItem', html).each((index, elem)=>{
-        data.total += Number($(elem).find('td:eq(5)').text().replace(/\n/g, '').replace(/\t/g, ''))
-        data.finished += Number($(elem).find('td:eq(6)').text().replace(/\n/g, '').replace(/\t/g, ''))
-    })
-    
-    $('.cssListAlternativeItem', html).each((index, elem)=>{
-        data.total += Number($(elem).find('td:eq(5)').text().replace(/\n/g, '').replace(/\t/g, ''))
-        data.finished += Number($(elem).find('td:eq(6)').text().replace(/\n/g, '').replace(/\t/g, ''))
-    })
-
     return data
 }
