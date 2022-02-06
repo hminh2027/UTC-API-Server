@@ -5,8 +5,8 @@ module.exports.getSchedule = (html) => {
     const $ = cheerio.load(html)
 
     $('.cssRangeItem3', html).each((index, elem)=>{
-        const subject = $(elem).find('td:eq(2)').text().replace(/\n/g, '').replace(/\t/g, '')
-        const time = $(elem).find('td:eq(4)').text().replace(/\n/g, '').replace(/\t/g, '')
+        const subject = $(elem).find('td:eq(2)').text().replace(/\n/g, '').replace(/\t/g, '').trim()
+        const time = $(elem).find('td:eq(4)').text().replace(/\n/g, '').replace(/\t/g, '').trim()
 
         data.push({subject, time})
     })
@@ -37,9 +37,9 @@ module.exports.getMarks = (html, grade) => {
     let data = []
     const $ = cheerio.load(html)
 
-    $('#tblStudentMark', html).find('tr').not('tr:eq(0)').each((index, elem)=>{
+    $('#tblStudentMark', html).find('tr').not('.DataGridFixedHeader').each((index, elem)=>{
         let mark = $(elem).find('td:eq(12)').html()
-        const subject = $(elem).find('td:eq(2)').text().replace(/\n/g, '').replace(/\t/g, '')
+        const subject = $(elem).find('td:eq(2)').text().replace(/\n/g, '').replace(/\t/g, '').trim()
         const credit = $(elem).find('td:eq(3)').text()
 
         if(!mark) return
@@ -82,12 +82,12 @@ module.exports.getGPA = (html, year) => {
     const $ = cheerio.load(html)
 
     if (!year) 
-        $('#grdResult', html).find('tr').not('tr:eq(0), tr:last').each((index, elem)=>{
+        $('#grdResult', html).find('tr').not('tr:last').not('.DataGridFixedHeader').each((index, elem)=>{
             const year = $(elem).find('td:eq(0)').text()
             const term = $(elem).find('td:eq(1)').text()
             const scaleOf10 = $(elem).find('td:eq(2)').text()
             const scaleOf4 = $(elem).find('td:eq(4)').text()
-            const credit = $(elem).find('td:eq(12)').text().replace(/\n/g, '').replace(/\t/g, '')
+            const credit = $(elem).find('td:eq(12)').text().replace(/\n/g, '').replace(/\t/g, '').trim()
             
             data.detailGPA.push({year, term, scaleOf10, scaleOf4, credit})
         })
@@ -98,7 +98,7 @@ module.exports.getGPA = (html, year) => {
             const term = $(elem).find('td:eq(1)').text()
             const scaleOf10 = $(elem).find('td:eq(2)').text()
             const scaleOf4 = $(elem).find('td:eq(4)').text()
-            const credit = $(elem).find('td:eq(12)').text().replace(/\n/g, '').replace(/\t/g, '')
+            const credit = $(elem).find('td:eq(12)').text().replace(/\n/g, '').replace(/\t/g, '').trim()
             
             data.detailGPA.push({year, term, scaleOf10, scaleOf4, credit})
         })
@@ -106,9 +106,62 @@ module.exports.getGPA = (html, year) => {
     $('#grdResult', html).find('tr:last').each((index, elem)=>{
         const scaleOf10 = $(elem).find('td:eq(2)').text()
         const scaleOf4 = $(elem).find('td:eq(4)').text()
-        const credit = $(elem).find('td:eq(12)').text().replace(/\n/g, '').replace(/\t/g, '')
+        const credit = $(elem).find('td:eq(12)').text().replace(/\n/g, '').replace(/\t/g, '').trim()
             
         data.GPA = {scaleOf10, scaleOf4, credit}
+    })
+    
+    return data
+}
+
+module.exports.getTuition = (html) => {
+    let data = {tuition: [], total: 0}
+    const $ = cheerio.load(html)
+
+    $('#tblTotalDueAmount', html).find('tr:not(:last-child)').not('.DataGridFixedHeader').each((index, elem)=>{
+        const term = $(elem).find('td:eq(2)').text().replace(/\n/g, '').replace(/\t/g, '').trim()
+        const attempt = $(elem).find('td:eq(3)').text().replace(/\n/g, '').replace(/\t/g, '').trim()
+        const amount = $(elem).find('td:eq(4)').text().replace(/\n/g, '').replace(/\t/g, '').trim()
+        
+        data.tuition.push({term, attempt, amount})
+    })
+
+    data.total = $('#lblDueAmount', html).text().match(/\d/g).join('')
+    
+    return data
+}
+
+module.exports.getPaidTuition = (html) => {
+    let data = {tuition: [], total: 0}
+    const $ = cheerio.load(html)
+
+    $('#tblPaid', html).find('tr:not(:last-child)').not('.DataGridFixedHeader').each((index, elem)=>{
+        const term = $(elem).find('td:eq(3)').text().replace(/\n/g, '').replace(/\t/g, '').trim()
+        const attempt = $(elem).find('td:eq(4)').text().replace(/\n/g, '').replace(/\t/g, '').trim()
+        const date = $(elem).find('td:eq(5)').text().replace(/\n/g, '').replace(/\t/g, '').trim()
+        const amount = $(elem).find('td:eq(6)').text().replace(/\n/g, '').replace(/\t/g, '').trim()
+
+        data.tuition.push({term, attempt, date, amount})
+    })
+
+    data.total = $('#lblPaidAmount', html).text().match(/\d/g).join('')
+    
+    return data
+}
+
+module.exports.getTuitionDebt = (html) => {
+    let data = {tuition: [], total: 0}
+    const $ = cheerio.load(html)
+
+    $('#tblDueAmount', html).find('tr:not(:last-child)').not('.DataGridFixedHeader').each((index, elem)=>{
+        const term = $(elem).find('td:eq(2)').text().replace(/\n/g, '').replace(/\t/g, '').trim()
+        const attempt = $(elem).find('td:eq(3)').text().replace(/\n/g, '').replace(/\t/g, '').trim()
+        const amount = $(elem).find('td:eq(4)').text().replace(/\n/g, '').replace(/\t/g, '').trim()
+
+        data.tuition.push({term, attempt, amount})
+        data.total += amount
+
+        console.log($(elem).html())
     })
     
     return data
