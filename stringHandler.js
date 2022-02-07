@@ -6,7 +6,7 @@ module.exports.stringHandler = (schedule, year, month, day) => {
         const date = new Date(year, month - 1, day)
         today = moment(date)
     }
-    else return
+    else today = moment()
     
     let finalSchedule = [[],[],[],[],[],[]]
     let check = false
@@ -30,11 +30,11 @@ module.exports.stringHandler = (schedule, year, month, day) => {
                 studyDays.map(d=>{
                     if(!d) return
                     const day = d.split('tiết')[0].trim()
-                    const shift = d.split('tiết')[1].trim()
-
+                    const shift = d.split('tiết')[1].trim().split(',').pop().match(/^\d+/g)/3
+                    
                     finalSchedule[day-2].push({
                         subject: e.subject.split('-')[0],
-                        time: 'Tiết ' + shift
+                        shift
                     })
                 })
             check=true
@@ -42,5 +42,8 @@ module.exports.stringHandler = (schedule, year, month, day) => {
         })
     })
     if(!check) return
+
+    finalSchedule.map(obj => obj.sort((a, b) => a.shift - b.shift))
+    
     return finalSchedule
 }
