@@ -18,17 +18,17 @@ module.exports.getStudent = (html) => {
     let data = {}
     const $ = cheerio.load(html)
 
-    data.lastName = $('#txtHoDem', html).val()
-    data.firstName = $('#txtTen', html).val()
-    data.gender = $('#gioitinh', html).text()
-    data.studentId = $('#txtMaSV', html).val()
-    data.studentBankAccount = $('#txtSoTaiKhoanNganHang', html).val()
-    data.identityCard = $('#txtCMTND', html).val()
-    data.birth = $('#txtNgaySinh', html).val()
-    data.bornIn = $('#txtNoiSinh', html).val()
-    data.country = $('#drpQuocTich', html).find('option[selected=selected]').text()
-    data.tel = $('#txtDienThoaiCaNHAN', html).val()
-    data.email = $('#txtEmail', html).val()
+    data.lastName = $('#txtHoDem', html).val().trim()
+    data.firstName = $('#txtTen', html).val().trim()
+    data.gender = $('#gioitinh', html).text().trim()
+    data.studentId = $('#txtMaSV', html).val().trim()
+    data.studentBankAccount = $('#txtSoTaiKhoanNganHang', html).val().trim()
+    data.identityCard = $('#txtCMTND', html).val().trim()
+    data.birth = $('#txtNgaySinh', html).val().trim()
+    data.bornIn = $('#txtNoiSinh', html).val().trim()
+    data.country = $('#drpQuocTich', html).find('option[selected=selected]').text().trim()
+    data.tel = $('#txtDienThoaiCaNHAN', html).val().trim()
+    data.email = $('#txtEmail', html).val().trim()
 
     return data
 }
