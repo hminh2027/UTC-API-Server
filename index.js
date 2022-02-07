@@ -1,17 +1,18 @@
 const express = require('express')
 const app = express()
 const routers = require('./routers/index')
+const path = require('path')
 
 app.use(express.json())
 app.use(express.urlencoded({ extended:true }))
-app.set('view engine', 'pug')
+// app.set('view engine', 'pug')
 
 const PORT = process.env.PORT || 8000
 
 routers(app)
 
 app.get('/', (req, res)=>{
-    res.render('index', {message: 'This is pug template!'})
+    res.sendFile(path.join(__dirname+'/views/index.html'))
 })
 
 
