@@ -12,8 +12,7 @@ module.exports.getTuition = async (req,res)=>{
         return res.status(200).json({data, error:''})
 
     } catch (err) {
-        console.log(err)
-        return res.json({data: '', error: err})
+        return res.status(err.status).json({data: '', error: err.body})
     }  
 }
 
@@ -28,8 +27,7 @@ module.exports.getPaidTuition = async (req,res)=>{
         return res.status(200).json({data, error:''})
 
     } catch (err) {
-        console.log(err)
-        return res.json({data: '', error: err})
+        return res.status(err.status).json({data: '', error: err.body})
     }  
 }
 
@@ -44,7 +42,6 @@ module.exports.getTuitionDebt = async (req,res)=>{
         return res.status(200).json({data, error:''})
 
     } catch (err) {
-        console.log(err)
-        return res.json({data: '', error: err})
+        return res.status(err.status).json({data: '', error: err.body})
     }  
 }

@@ -13,6 +13,6 @@ module.exports.getStudent = async (req,res)=>{
 
     } catch (err) {
         console.log(err)
-        return res.json({data: '', error: err})
+        return res.status(err.status).json({data: '', error: err.body})
     }  
 }

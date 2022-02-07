@@ -14,7 +14,6 @@ module.exports.getMarks = async (req,res)=>{
         return res.status(200).json({data, error:''})
 
     } catch (err) {
-        console.log(err)
         return res.json({data: '', error: err})
     }  
 }
@@ -32,7 +31,6 @@ module.exports.getGPA = async (req,res)=>{
         return res.status(200).json({data, error:''})
 
     } catch (err) {
-        console.log(err)
         return res.json({data: '', error: err})
     }  
 }

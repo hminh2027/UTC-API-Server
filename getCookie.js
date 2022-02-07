@@ -22,7 +22,7 @@ module.exports.getCookie = (username, password, url) => {
                 const cookie = response.headers['set-cookie'].toString().split(';')[0]
                 resolve(cookie)          
             }
-            else reject('Wrong username or password')
+            else reject({status: 404, body: 'Wrong username or password'})
         })
     })
 }

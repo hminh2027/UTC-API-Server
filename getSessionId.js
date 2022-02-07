@@ -11,7 +11,7 @@ module.exports.getSessionId = () => {
             if (!error && response.statusCode == 200) {
                 resolve(response.request.path.split('/')[2])          
             }
-            else reject('Get seesion id failed!')
+            else reject({status: 400, body: 'Get session id failed!'})
         })
     })
 }

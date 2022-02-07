@@ -10,10 +10,12 @@ module.exports.getAllSchedule = async (req, res) => {
         const html = await getHTML(username, password, 'StudyRegister/StudyRegister.aspx')
         const data = getSchedule(html)
 
+        if (!data) return res.status(204).json({data: 'No study schedule available!', error:''})
+
         return res.status(200).json({data, error:''})
 
     } catch (err) {
-        return res.status(400).json({data: '', error: err})
+        return res.status(err.status).json({data: '', error: err.body})
     }  
 }
 
@@ -26,12 +28,12 @@ module.exports.getScheduleOfToday = async (req, res) => {
         const data = getSchedule(html)
         const finalData = stringHandler(data)
 
-        if (!finalData) return res.status(200).json({data: 'No study schedule available!', error:''})
+        if (!finalData) return res.status(204).json({data: 'No study schedule available!', error:''})
 
         return res.status(200).json({data: finalData, error:''})
 
     } catch (err) {
-        return res.status(400).json({data: '', error: err})
+        return res.status(err.status).json({data: '', error: err.body})
     }  
 }
 
@@ -47,11 +49,11 @@ module.exports.getScheduleOfDay = async (req, res) => {
         const data = getSchedule(html)
         const finalData = stringHandler(data, year, month, day)
 
-        if (!finalData) return res.status(200).json({data: 'No study schedule available!', error:''})
+        if (!finalData) return res.status(204).json({data: 'No study schedule available!', error:''})
 
         return res.status(200).json({data: finalData, error:''})
 
     } catch (err) {
-        return res.status(400).json({data: '', error: err})
+        return res.status(err.status).json({data: '', error: err.body})
     }  
 }
