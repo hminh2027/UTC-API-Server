@@ -6,7 +6,7 @@ module.exports.stringHandler = (schedule, year, month, day) => {
         const date = new Date(year, month - 1, day)
         today = moment(date)
     }
-    else return
+    else today = moment()
     
     let finalSchedule = [[],[],[],[],[],[]]
     let check = false
