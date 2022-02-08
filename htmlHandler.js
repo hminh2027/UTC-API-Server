@@ -82,7 +82,7 @@ module.exports.getGPA = (html, year) => {
     const $ = cheerio.load(html)
 
     if (!year) 
-        $('#grdResult', html).find('tr').not('tr:last').not('.DataGridFixedHeader').each((index, elem)=>{
+        $('#grdResult', html).find('tr').not('tr:eq(0), tr:last').each((index, elem)=>{
             const year = $(elem).find('td:eq(0)').text()
             const term = $(elem).find('td:eq(1)').text()
             const scaleOf10 = $(elem).find('td:eq(2)').text()
