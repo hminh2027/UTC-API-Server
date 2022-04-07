@@ -11,6 +11,15 @@ module.exports.getSchedule = (html) => {
         data.push({subject, time})
     })
 
+    if(data.length === 0) {
+        $('#tblOtherRegister tr', html).find('tr:not(:last-child)').not('.DataGridFixedHeader').each((index, elem)=>{
+            const subject = $(elem).find('td:eq(1)').text().replace(/\n/g, '').replace(/\t/g, '').trim()
+            const time = $(elem).find('td:eq(2)').text().replace(/\n/g, '').replace(/\t/g, '').trim()
+    
+            data.push({subject, time})
+        })
+    }
+
     return data
 }
 
