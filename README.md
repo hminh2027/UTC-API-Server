@@ -2,7 +2,7 @@
 <br />
 
 # UTC API SERVER
-An awesome API to work with students's information studying in UTC!
+An awesome API to work with students' information studying at UTC!
 
 This is a NodeJS library with Javascript support NodeJS Server
 
