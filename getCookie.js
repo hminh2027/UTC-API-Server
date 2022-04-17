@@ -17,7 +17,7 @@ module.exports.getCookie = (username, password, url) => {
     }
 
     return new Promise((resolve, reject) => {
-        request(options, (error ,response, body)=>{
+        request(options, (error ,response, body) => {
             if (!error && response.headers['set-cookie'] !== undefined) {
                 const cookie = response.headers['set-cookie'].toString().split(';')[0]
                 resolve(cookie)          
