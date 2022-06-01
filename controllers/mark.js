@@ -1,5 +1,5 @@
 const { getHTML } = require("../getHTML")
-const { getMarks, getGPA, getExam, getHiddenCredential } = require("../htmlHandler")
+const { getMarks, getGPA, getExam, getHMarkCredential } = require("../htmlHandler")
 
 module.exports.getMarks = async (req,res)=>{
     const {username, password} = req.body
@@ -39,19 +39,14 @@ module.exports.getExam = async (req,res)=>{
     const {username, password} = req.body
     if (!username || !password) return res.status(400).json({data: '', error: 'Username or password not found!'})
 
-    const {year} = req.params
-
     try {
         const html = await getHTML(username, password, 'StudentMark.aspx')
-        const credential = await getHiddenCredential(html)
+        const credential = await getHMarkCredential(html)
         const html2 = await getHTML(username, password, 'StudentMark.aspx', credential)
-
-        console.log(credential)
-        //const data = await getExam(html2, year)
+   
+        const data = await getExam(html2)
         
-        return res.send(html2)
-
-        //return res.status(200).json({data, error:''})
+        return res.status(200).json({data, error:''})
 
     } catch (err) {
         console.log(err)

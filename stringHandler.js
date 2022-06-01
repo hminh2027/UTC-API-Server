@@ -9,7 +9,6 @@ module.exports.stringHandler = (schedule, year, month, day) => {
     else today = moment()
     
     let finalSchedule = [[],[],[],[],[],[]]
-    let check = false
 
     schedule.map(e=>{
         const periodAndStudyDays = e.time.split('\Từ')
@@ -37,13 +36,11 @@ module.exports.stringHandler = (schedule, year, month, day) => {
                         shift
                     })
                 })
-            check=true
             }
         })
     })
-    if(!check) return
 
     finalSchedule.map(obj => obj.sort((a, b) => a.shift - b.shift))
-    
+
     return finalSchedule
 }

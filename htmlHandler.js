@@ -23,6 +23,24 @@ module.exports.getSchedule = (html) => {
     return data
 }
 
+module.exports.getExamSchedule = (html) => {
+    let data = []
+    const $ = cheerio.load(html)
+
+    $('#tblCourseList', html).find('tr:not(:last-child)').not('.DataGridFixedHeader').each((index, elem)=>{
+        const subject = $(elem).find('td:eq(2)').text().replace(/\n/g, '').replace(/\t/g, '').trim()
+        const date = $(elem).find('td:eq(4)').text().replace(/\n/g, '').replace(/\t/g, '').trim()
+        const time = $(elem).find('td:eq(5)').text().replace(/\n/g, '').replace(/\t/g, '').trim()
+        const examForm = $(elem).find('td:eq(6)').text().replace(/\n/g, '').replace(/\t/g, '').trim()
+        const orderID = $(elem).find('td:eq(7)').text().replace(/\n/g, '').replace(/\t/g, '').trim()
+        const place = $(elem).find('td:eq(8)').text().replace(/\n/g, '').replace(/\t/g, '').trim()
+
+        data.push({subject, date, time, examForm, orderID, place})
+    })
+
+    return data
+}
+
 module.exports.getStudent = (html) => {
     let data = {}
     const $ = cheerio.load(html)
@@ -123,38 +141,15 @@ module.exports.getGPA = (html, year) => {
     return data
 }
 
-module.exports.getExam = (html, year) => {
-    let data = {detailGPA:[], GPA: {}}
+module.exports.getExam = (html) => {
+    let data = []
     const $ = cheerio.load(html)
 
-    if (!year) 
-        $('#grdResult', html).find('tr').not('tr:eq(0), tr:last').each((index, elem)=>{
-            const year = $(elem).find('td:eq(0)').text()
-            const term = $(elem).find('td:eq(1)').text()
-            const scaleOf10 = $(elem).find('td:eq(2)').text()
-            const scaleOf4 = $(elem).find('td:eq(4)').text()
-            const credit = $(elem).find('td:eq(12)').text().replace(/\n/g, '').replace(/\t/g, '').trim()
-            
-            data.detailGPA.push({year, term, scaleOf10, scaleOf4, credit})
-        })
-    
-    else
-        $('#grdResult', html).find(`tr:eq(${(year*3)}), tr:eq(${(year*3)-1}), tr:eq(${(year*3)-2})`).not('tr:last').each((index, elem)=>{
-            const year = $(elem).find('td:eq(0)').text()
-            const term = $(elem).find('td:eq(1)').text()
-            const scaleOf10 = $(elem).find('td:eq(2)').text()
-            const scaleOf4 = $(elem).find('td:eq(4)').text()
-            const credit = $(elem).find('td:eq(12)').text().replace(/\n/g, '').replace(/\t/g, '').trim()
-            
-            data.detailGPA.push({year, term, scaleOf10, scaleOf4, credit})
-        })
-
-    $('#grdResult', html).find('tr:last').each((index, elem)=>{
-        const scaleOf10 = $(elem).find('td:eq(2)').text()
-        const scaleOf4 = $(elem).find('td:eq(4)').text()
-        const credit = $(elem).find('td:eq(12)').text().replace(/\n/g, '').replace(/\t/g, '').trim()
-            
-        data.GPA = {scaleOf10, scaleOf4, credit}
+    $('#tblStudentMark', html).find('tr:not(:last-child)').not('.DataGridFixedHeader').each((index, elem)=>{
+        let mark = $(elem).find('td:eq(10)').html()
+        const subject = $(elem).find('td:eq(2)').text().replace(/\n/g, '').replace(/\t/g, '').trim()
+        const credit = $(elem).find('td:eq(3)').text()
+        data.push({subject, mark, credit})
     })
     
     return data
@@ -213,21 +208,33 @@ module.exports.getTuitionDebt = (html) => {
     return data
 }
 
-module.exports.getHiddenCredential = (html) => {
-    let data = {
-        __VIEWSTATE: '',
-        __EVENTVALIDATION: '',
-        hidStudentId: '',
-        hidSymbolMark: '',
-        drpHK: ''
-    }
+module.exports.getHMarkCredential = (html) => {
+    let data = {}
     const $ = cheerio.load(html)
 
     data.__VIEWSTATE = $('#__VIEWSTATE', html).val()
+    data.__EVENTTARGET = 'drpHK'
+    data.__VIEWSTATEGENERATOR = $('#__VIEWSTATEGENERATOR', html).val()
+    data.hidFieldId = $('#hidFieldId', html).val()
+    data.hidFieldName = $('#hidFieldName', html).val()
     data.__EVENTVALIDATION = $('#__EVENTVALIDATION', html).val()
     data.hidStudentId = $('#hidStudentId', html).val()
     data.hidSymbolMark = $('#hidSymbolMark', html).val()
-    data.drpHK = '2021_2022_1'
+    data.drpHK = '2021_2022_2'
+
+    return data
+}
+
+module.exports.getScheduleCredential = (html) => {
+    let data = {}
+    const $ = cheerio.load(html)
+
+    data.__VIEWSTATE = $('#__VIEWSTATE', html).val()
+    data.__EVENTTARGET = 'drpHK'
+    data.__VIEWSTATEGENERATOR = $('#__VIEWSTATEGENERATOR', html).val()
+    data.__EVENTVALIDATION = $('#__EVENTVALIDATION', html).val()
+    data.hidStudentId = $('#hidStudentId', html).val()
+    data.drpSemester = '9de3700801434a3996441550c44dd8e0'
 
     return data
 }

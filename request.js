@@ -30,7 +30,7 @@ module.exports.postRequest = (cookie, url, credential) => {
         url,
         method: 'POST',
         headers,
-        body: `__VIEWSTATE=${credential.__VIEWSTATE}&__EVENTVALIDATION=${credential.__EVENTVALIDATION}&hidStudentId=${credential.hidStudentId}&hidSymbolMark=${credential.hidSymbolMark}&drpHK=${credential.drpHK}`
+        formData: credential
     }
 
     return new Promise((resolve, reject) => {
