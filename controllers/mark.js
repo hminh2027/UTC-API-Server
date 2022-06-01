@@ -1,5 +1,5 @@
 const { getHTML } = require("../getHTML")
-const { getMarks, getGPA, getExam, getHMarkCredential } = require("../htmlHandler")
+const { getMarks, getGPA, getExam, getMarkCredential } = require("../htmlHandler")
 
 module.exports.getMarks = async (req,res)=>{
     const {username, password} = req.body
@@ -41,7 +41,7 @@ module.exports.getExam = async (req,res)=>{
 
     try {
         const html = await getHTML(username, password, 'StudentMark.aspx')
-        const credential = await getHMarkCredential(html)
+        const credential = await getMarkCredential(html)
         const html2 = await getHTML(username, password, 'StudentMark.aspx', credential)
    
         const data = await getExam(html2)

@@ -208,7 +208,7 @@ module.exports.getTuitionDebt = (html) => {
     return data
 }
 
-module.exports.getHMarkCredential = (html) => {
+module.exports.getMarkCredential = (html) => {
     let data = {}
     const $ = cheerio.load(html)
 
@@ -220,7 +220,7 @@ module.exports.getHMarkCredential = (html) => {
     data.__EVENTVALIDATION = $('#__EVENTVALIDATION', html).val()
     data.hidStudentId = $('#hidStudentId', html).val()
     data.hidSymbolMark = $('#hidSymbolMark', html).val()
-    data.drpHK = '2021_2022_2'
+    data.drpHK = $('#drpHK').find('option:last').val()
 
     return data
 }
@@ -234,7 +234,7 @@ module.exports.getScheduleCredential = (html) => {
     data.__VIEWSTATEGENERATOR = $('#__VIEWSTATEGENERATOR', html).val()
     data.__EVENTVALIDATION = $('#__EVENTVALIDATION', html).val()
     data.hidStudentId = $('#hidStudentId', html).val()
-    data.drpSemester = '9de3700801434a3996441550c44dd8e0'
+    data.drpSemester = $('#drpSemester').find('option:eq(2)').val()
 
     return data
 }
