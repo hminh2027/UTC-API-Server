@@ -123,6 +123,43 @@ module.exports.getGPA = (html, year) => {
     return data
 }
 
+module.exports.getExam = (html, year) => {
+    let data = {detailGPA:[], GPA: {}}
+    const $ = cheerio.load(html)
+
+    if (!year) 
+        $('#grdResult', html).find('tr').not('tr:eq(0), tr:last').each((index, elem)=>{
+            const year = $(elem).find('td:eq(0)').text()
+            const term = $(elem).find('td:eq(1)').text()
+            const scaleOf10 = $(elem).find('td:eq(2)').text()
+            const scaleOf4 = $(elem).find('td:eq(4)').text()
+            const credit = $(elem).find('td:eq(12)').text().replace(/\n/g, '').replace(/\t/g, '').trim()
+            
+            data.detailGPA.push({year, term, scaleOf10, scaleOf4, credit})
+        })
+    
+    else
+        $('#grdResult', html).find(`tr:eq(${(year*3)}), tr:eq(${(year*3)-1}), tr:eq(${(year*3)-2})`).not('tr:last').each((index, elem)=>{
+            const year = $(elem).find('td:eq(0)').text()
+            const term = $(elem).find('td:eq(1)').text()
+            const scaleOf10 = $(elem).find('td:eq(2)').text()
+            const scaleOf4 = $(elem).find('td:eq(4)').text()
+            const credit = $(elem).find('td:eq(12)').text().replace(/\n/g, '').replace(/\t/g, '').trim()
+            
+            data.detailGPA.push({year, term, scaleOf10, scaleOf4, credit})
+        })
+
+    $('#grdResult', html).find('tr:last').each((index, elem)=>{
+        const scaleOf10 = $(elem).find('td:eq(2)').text()
+        const scaleOf4 = $(elem).find('td:eq(4)').text()
+        const credit = $(elem).find('td:eq(12)').text().replace(/\n/g, '').replace(/\t/g, '').trim()
+            
+        data.GPA = {scaleOf10, scaleOf4, credit}
+    })
+    
+    return data
+}
+
 module.exports.getTuition = (html) => {
     let data = {tuition: [], total: 0}
     const $ = cheerio.load(html)
@@ -173,5 +210,24 @@ module.exports.getTuitionDebt = (html) => {
         console.log($(elem).html())
     })
     
+    return data
+}
+
+module.exports.getHiddenCredential = (html) => {
+    let data = {
+        __VIEWSTATE: '',
+        __EVENTVALIDATION: '',
+        hidStudentId: '',
+        hidSymbolMark: '',
+        drpHK: ''
+    }
+    const $ = cheerio.load(html)
+
+    data.__VIEWSTATE = $('#__VIEWSTATE', html).val()
+    data.__EVENTVALIDATION = $('#__EVENTVALIDATION', html).val()
+    data.hidStudentId = $('#hidStudentId', html).val()
+    data.hidSymbolMark = $('#hidSymbolMark', html).val()
+    data.drpHK = '2021_2022_1'
+
     return data
 }

@@ -2,11 +2,12 @@ const md5 = require('md5')
 
 const { getSessionId } = require('./getSessionId')
 const { getCookie } = require('./getCookie')
-const { getRequest } = require('./request')
+const { getRequest, postRequest } = require('./request')
 
 const originUrl = 'https://qldt.utc.edu.vn/CMCSoft.IU.Web.Info'
 
-module.exports.getHTML = async (username, password, page) => {
+module.exports.getHTML = async (username, password, page, credential) => {
+    let html
     const hashedPasword = md5(password)
     const sessionId = await getSessionId()
 
@@ -14,7 +15,8 @@ module.exports.getHTML = async (username, password, page) => {
     const url = `${originUrl}/${sessionId}/${page}`
 
     const cookie = await getCookie(username, hashedPasword, loginUrl)
-    const html = await getRequest(cookie, url)
-
+    if (credential) html = await postRequest(cookie, url, credential)
+    else html = await getRequest(cookie, url)
+    
     return html
 }
