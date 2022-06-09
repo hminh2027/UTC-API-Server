@@ -8,7 +8,7 @@ let should = chai.should()
 require('dotenv').config()
 
 let credential = {
-    username: process.env.USERNAME,
+    username: process.env.STUDENTID,
     password: process.env.PASSWORD
 }
 
