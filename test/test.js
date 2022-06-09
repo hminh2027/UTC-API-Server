@@ -2,7 +2,7 @@ process.env.NODE_ENV = 'test'
 
 let chai = require('chai')
 let chaiHttp = require('chai-http')
-let server = require('../server')
+let app = require('../index')
 let should = chai.should()
 
 chai.use(chaiHttp)
@@ -17,14 +17,19 @@ describe('Api', () => {
      */
     describe('/POST schedule', () => {
         it('it should get all the schedule', (done) => {
-            chai.request(server)
-                .get('/schedule')
+            let credential = {
+                username: '191210709',
+                password: '85273200'
+            }
+
+            chai.request(app)
+                .post('/schedule')
+                .send(credential)
                 .end((err, res) => {
                     res.should.have.status(200);
                     res.body.should.be.a('array');
-                    res.body.length.should.be.eql(9); // fixme :)
-                    done();
-                });
+                    done()
+                })
         });
     });
 });

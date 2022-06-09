@@ -16,3 +16,5 @@ app.get('/', (req, res)=>{
 
 
 app.listen(PORT, ()=>console.log(`Server is working on ${PORT}!!`))
+
+module.exports = app

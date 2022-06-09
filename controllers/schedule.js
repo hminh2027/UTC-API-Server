@@ -12,9 +12,12 @@ module.exports.getAllSchedule = async (req, res) => {
 
         if (!data) return res.status(200).json({data: [], error:''})
 
-        if (finalData.every(e => e.length === 0)) return res.status(200).json({data: 'No schedule found!', error:''})
+        if (data.every(e => e.length === 0)) return res.status(200).json({data: 'No schedule found!', error:''})
+
+        return res.status(200).json({data, error:''})
 
     } catch (err) {
+        console.log(err)
         return res.status(err.status).json({data: '', error: err.body})
     }  
 }
