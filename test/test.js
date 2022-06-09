@@ -5,9 +5,11 @@ let chaiHttp = require('chai-http')
 let app = require('../index')
 let should = chai.should()
 
+require('dotenv').config()
+
 let credential = {
-    username: '191210709',
-    password: '85273200'
+    username: process.env.USERNAME,
+    password: process.env.PASSWORD
 }
 
 chai.use(chaiHttp)
